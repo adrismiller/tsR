@@ -1,6 +1,5 @@
 devtools::install_github('charlie86/spotifyr')
-Sys.setenv(SPOTIFY_CLIENT_ID = '556b053ae2fb45ccba1936e608c9739e')
-Sys.setenv(SPOTIFY_CLIENT_SECRET = 'c54d125fed3741cbb7a3fc26d19e230e')
+
 library(spotifyr)
 library(tidyverse)
 library(lubridate)
@@ -102,13 +101,13 @@ pos %>%
   scale_fill_manual(values=myPalette) 
 
 pos %>% group_by(album_name) %>% 
-  mutate(p_v = var(positivity), m = mean(positivity) )   %>% 
+  mutate(p_v = var(positivity), m = median(positivity) )   %>% 
   ggplot(aes(x= m,  y=p_v, label=album_name)) + 
   geom_smooth(color="darkgrey", method='loess', formula='y~x')+
   geom_label(fill=lightpink) + 
   axistheme + 
-  scale_fill_manual(values=myPalette) + 
-  labs(title="Positivity Variance by Album",x="Mean Positivity", y="Variance in Positivity")
+  scale_fill_manual(values=myPalette) +  #expand_limits(y = 0) +
+  labs(title="Positivity Variance by Album",x="Median Positivity", y="Variance in Positivity")
 
 
 pos %>% group_by(album_name) %>% 
@@ -143,9 +142,9 @@ train_set <- pos %>% slice(-test_index)
 test_set <- pos %>% slice(test_index)
 
 
-#grid = data.frame(k=seq(3,100, 2))
+grid = data.frame(mtry=seq(3,100, 2))
 cor(pos$positivity, pos$key_mode)
-fit <- train(album_name ~ positivity + duration_ms + danceability + key, data=train_set, method="lda")
+fit <- train(album_name ~ positivity + duration_ms + danceability + key, data=train_set, method="rf", tuneGrid=grid)
 
 fit$results
 pred <-   predict(fit, test_set)
