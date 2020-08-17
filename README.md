@@ -1,17 +1,17 @@
 # Taylor Swift: Data Visualization and ML 
 Uses R to visualize how Taylor Swift's music has changed over the years!
 
-  # Cleaning Data
+  ##  Cleaning Data
   - Using spotifyR package, gets data on all Taylor Swift songs from Spotify API 
   - Using dplyr, removes weird albums (ie Karaoke, Special Edtions, Remixes), and 
   removes any duplicate songs, remove columns with unnecessary info 
   - Adds a column for positivity, which is a combination of valence and energy 
   
-  # Visualization 
+  ## Visualization 
   - Using ggplot2, creates graphs visualizing the changes in Taylor Swift music over time
   (in positivity, danceability, duration, etc)
   
-  ## Graphs! 
+  ### Graphs! 
   
   How key album features (number of songs,the duration of songs, and the distribution of each key) vary per album
   ![Alt text](https://github.com/adrismiller/tsR/blob/master/graphs/songsPerAlbum.jpeg)
@@ -31,7 +31,7 @@ Uses R to visualize how Taylor Swift's music has changed over the years!
   ![Alt text](https://github.com/adrismiller/tsR/blob/master/graphs/danceabilityByTrack.jpeg)
 
   
-  # ML 
+  ## ML 
   - Divides data into training set and test set by album name
   - Using caret, creates 4 models (knn, qda, naive_bayes, and svmLinear), using 
   danceability, key, positivity, and acousticness to predict which album it came from
