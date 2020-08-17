@@ -10,7 +10,7 @@ Uses R to visualize how Taylor Swift's music has changed over the years!
   # Visualization 
   - Using ggplot2, creates graphs visualizing the changes in Taylor Swift music over time
   (in positivity, danceability, duration, etc), which can be found in graphs folder or by opening
-  index.html file
+  https://adrismiller.github.io/tsR/ 
   
   # ML 
   - Divides data into training set and test set by album name
