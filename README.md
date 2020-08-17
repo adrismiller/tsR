@@ -1,4 +1,4 @@
-# Taylor Swift: Data Visulation and ML 
+# Taylor Swift: Data Visualization and ML 
 Uses R to visualize how Taylor Swift's music has changed over the years!
 
   # Cleaning Data
