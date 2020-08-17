@@ -39,4 +39,5 @@ Uses R to visualize how Taylor Swift's music has changed over the years!
   (which is not great, but much better than randomly guessing one of 8 albums) 
   - Probably not going to get much more accurate, becuase all of her music shares a qualities 
   - One problem with the model is that a lot of it's accuracy comes from over guessing a couple albums 
-   (Fearless is guessed 40% percent of the time, Speak Now is only guessed 2% of the time) 
+   (Fearless is guessed 40% percent of the time, Speak Now is only guessed 2% of the time despite 
+   Fearless comprising only 15% of the data and Speak Now 10%) 
