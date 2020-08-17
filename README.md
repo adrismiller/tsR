@@ -9,8 +9,27 @@ Uses R to visualize how Taylor Swift's music has changed over the years!
   
   # Visualization 
   - Using ggplot2, creates graphs visualizing the changes in Taylor Swift music over time
-  (in positivity, danceability, duration, etc), which can be found in graphs folder or by opening
-  https://adrismiller.github.io/tsR/ 
+  (in positivity, danceability, duration, etc)
+  
+  Graphs! 
+  
+  How key album features (number of songs,the duration of songs, and the distribution of each key) vary per album
+  ![Alt text](https://github.com/adrismiller/tsR/blob/master/graphs/songsPerAlbum.jpeg.jpeg)
+  ![Alt text](https://github.com/adrismiller/tsR/blob/master/graphs/durationByAlbum.jpeg)
+  ![Alt text](https://github.com/adrismiller/tsR/blob/master/graphs/keyDistribution.jpeg) 
+  
+  How positivity varies by each album, how positivity changes over the course of the album, and how positivity 
+  varies for each album. Albums with higher median positivity tend to have a higher variance (ie sadder albums stay sad, 
+  but happy albums still have sadder songs) 
+  ![Alt text](https://github.com/adrismiller/tsR/blob/master/graphs/posByAlbum.jpeg )
+  ![Alt text](https://github.com/adrismiller/tsR/blob/master/graphs/posByTrack.jpeg)
+  ![Alt text](https://github.com/adrismiller/tsR/blob/master/graphs/posDistribution.jpeg)
+  ![Alt text](https://github.com/adrismiller/tsR/blob/master/graphs/posVariance.jpeg)
+  
+  How danceability varies by each album, and how it changes over the course of albums
+  ![Alt text](https://github.com/adrismiller/tsR/blob/master/graphs/danceabilityByAlbum.jpeg)
+  ![Alt text](https://github.com/adrismiller/tsR/blob/master/graphs/danceabilityByTrack.jpeg)
+
   
   # ML 
   - Divides data into training set and test set by album name
