@@ -14,7 +14,7 @@ Uses R to visualize how Taylor Swift's music has changed over the years!
   ## Graphs! 
   
   How key album features (number of songs,the duration of songs, and the distribution of each key) vary per album
-  ![Alt text](https://github.com/adrismiller/tsR/blob/master/graphs/songsPerAlbum.jpeg.jpeg)
+  ![Alt text](https://github.com/adrismiller/tsR/blob/master/graphs/songsPerAlbum.jpeg)
   ![Alt text](https://github.com/adrismiller/tsR/blob/master/graphs/durationByAlbum.jpeg)
   ![Alt text](https://github.com/adrismiller/tsR/blob/master/graphs/keyDistribution.jpeg) 
   
