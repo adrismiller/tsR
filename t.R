@@ -16,7 +16,19 @@ strings <- c("Commentary", "Live", "Karaoke", "Version","Edit", "Mix", "Remix")
 songs <- main_8 %>% filter(!str_detect(track_name, paste(strings, collapse = "|")))
 
 # remove duplicates 
-songs <- songs %>% distinct(track_name, .keep_all = TRUE) mutate(album_name = reorder(album_name, album_release_date, FUN= first)) %>%
+songs <- songs %>% distinct(track_name, .keep_all = TRUE) 
+
+# get rid of columns that aren't useful 
+songs <- songs %>% select(-artist_name, -artist_id, -album_type, -album_id, 
+                          -album_images,-album_release_date, -album_release_date_precision,
+                          -track_id, -track_href, -track_preview_url, -track_uri, 
+                          -available_markets, -analysis_url, -time_signature, 
+                          -is_local, -external_urls.spotify, -type, -disc_number,
+                          -artists)
+
+# positvity is a combination of valence and energy
+songs <- songs %>% mutate(positivity=sqrt((valence^2) + (energy^2)))
+
 
 # some fun plots :)
 axistheme <- theme(plot.title = element_text(family = "Helvetica", face = "bold", size = (17), colour="#6b6b6b"),
@@ -25,6 +37,8 @@ axistheme <- theme(plot.title = element_text(family = "Helvetica", face = "bold"
 myPalette <- c("#FF9AA2",  "#FFDCF4", "#FFDAC1", "#FFF49C", "#E2F0CB", "#B5EAD7", "#C7CEEA", "#85a8ba", "#ffffff", "#bfbfbf", "#696969", "#141414" )
 
 lightpink <- "#FFDCF4"
+
+# songsPerAlbum.jpeg
 songs %>% 
   mutate(album_name = reorder(album_name, album_release_date, FUN= first)) %>%
   ggplot(aes(album_name)) + 
@@ -33,6 +47,8 @@ songs %>%
   theme(axis.text.x = element_text(angle = 90)) +
   labs(title="Number of Songs per Album", x= "Album", y="Number of Songs") 
 
+
+# danceabilityByTrack.jpeg
 songs %>%
   mutate(album_name = reorder(album_name, album_release_date, FUN= first)) %>%
   ggplot(aes(track_number, danceability, color=album_name)) + 
@@ -42,91 +58,76 @@ songs %>%
   theme(panel.background = element_rect(fill = '#f7f7f7')) + 
   scale_color_manual(values=myPalette)
   
-
-
+#danceabilityByAlbum.jpeg changed
 songs %>%  
   mutate(album_name = reorder(album_name, album_release_date, FUN= first)) %>%
   ggplot(aes(y=danceability, x=album_release_year, fill=album_name)) + 
   geom_boxplot() + 
   axistheme +
-  labs(title="Danceability by Album", x= "Time", y="Danceability", fill="Album") + 
+  labs(title="Danceability by Album", x= "Release Date", y="Danceability", fill="Album") + 
   scale_fill_manual(values=myPalette) 
- # expand_limits(y = 0)
 
 
+# plots about positivity values
+
+#posDistribution.jpeg
 songs %>%  
-  mutate(album_name = reorder(album_name, album_release_date, FUN= first)) %>%
-  ggplot(aes(y=danceability, x=duration_ms / 1000, fill=album_name)) + 
-  geom_point(colour="black",pch=21, size=3) + 
-  axistheme +
-  labs(title="Danceability versus Duration", x= "Duration(seconds)", y="Danceability", fill="Album") + 
-  scale_fill_manual(values=myPalette) 
-# expand_limits(y = 0)
-
-songs %>%  
-  mutate(album_name = reorder(album_name, album_release_date, FUN= first)) %>%
-  ggplot(aes(y=duration_ms / 1000, x=album_release_year, fill=album_name)) + 
-  geom_boxplot() + 
-  axistheme +
-  scale_fill_manual(values=myPalette)  + 
-  labs(title="Release Year versus Duration", x= "Year", y="Duration(seconds)", fill="Album") 
-
-# positvity is a combination of valence and energy
-pos <- songs %>% mutate(positivity=sqrt((valence^2) + (energy^2))) 
-pos %>%  
   mutate(album_name = reorder(album_name, album_release_date, FUN= first)) %>%
   ggplot(aes(positivity)) + 
   geom_density(fill=lightpink) +  
   facet_wrap(album_name ~ .) +
   axistheme + 
-  labs(title="Positivity Distribution by Album",x="Distribution", y="Energy", fill="Album") + 
+  labs(title="Positivity Distribution by Album",x="Distribution", y="Positivity", fill="Album") + 
   scale_fill_manual(values=myPalette) 
 
-pos %>%  
+# posOverTime.jpeg
+songs %>%  
   mutate(album_name = reorder(album_name, album_release_date, FUN= first)) %>%
   ggplot(aes(album_release_year, positivity, fill=album_name)) + 
   geom_boxplot() +
   geom_point(show.legend = FALSE, alpha=0.3) + 
-  axistheme + #stat_summary(fun=mean, geom="line", aes(group=1))  + 
-  labs(title="Positivity by Album",x="Release Year", y="Energy", fill="Album") + 
+  axistheme + 
+  labs(title="Positivity by Album",x="Release Year", y="Positivity", fill="Album") + 
   scale_fill_manual(values=myPalette) 
 
-pos %>%  
+# posByTrack.jpeg
+songs %>%
   mutate(album_name = reorder(album_name, album_release_date, FUN= first)) %>%
-  ggplot(aes(album_release_year, positivity, fill=album_name)) + 
-  geom_boxplot() +
-  geom_point(show.legend = FALSE, alpha=0.3) + 
-  axistheme + #stat_summary(fun=mean, geom="line", aes(group=1))  + 
-  labs(title="Positivity by Album",x="Release Year", y="Energy", fill="Album") + 
-  scale_fill_manual(values=myPalette) 
+  ggplot(aes(track_number, positivity, color=album_name)) + 
+  geom_smooth(method = loess, alpha=0.00, formula = 'y~x') + 
+  axistheme + 
+  labs(title="Positivity by Track Number", x= "Track Num", y="Positivity") + 
+  theme(panel.background = element_rect(fill = '#f7f7f7')) + 
+  scale_color_manual(values=myPalette)
 
-pos %>% group_by(album_name) %>% 
+
+# albums that have higher positive medeians, have higher variance in positivity
+# posVariance.jpeg
+songs %>% group_by(album_name) %>% 
   mutate(p_v = var(positivity), m = median(positivity) )   %>% 
   ggplot(aes(x= m,  y=p_v, label=album_name)) + 
   geom_smooth(color="darkgrey", method='loess', formula='y~x')+
   geom_label(fill=lightpink) + 
   axistheme + 
-  scale_fill_manual(values=myPalette) +  #expand_limits(y = 0) +
-  labs(title="Positivity Variance by Album",x="Median Positivity", y="Variance in Positivity")
+  scale_fill_manual(values=myPalette) +  
+  labs(title="Positivity Variance vs Median Positivity",x="Median Positivity", y="Variance in Positivity")
 
+# Duration of albums over time
 
-pos %>% group_by(album_name) %>% 
-  ggplot(aes(x= positivity,  y=danceability, fill=album_name)) + 
-  geom_point(colour="black",pch=21, size=3) + 
-  scale_fill_manual(values=myPalette) + 
-  axistheme + 
-  labs(title="Positivity x Danceability",x="Positivity", y="Danceability")
-
-pos %>%  
+#durationByAlbum changedß
+songs %>%  
   mutate(album_name = reorder(album_name, album_release_date, FUN= first)) %>%
   ggplot(aes(album_release_year, duration_ms / 1000, fill=album_name)) + 
   geom_boxplot() +
   geom_point(show.legend = FALSE, alpha=0.3) + 
-  axistheme + #stat_summary(fun=mean, geom="line", aes(group=1))  + 
-  labs(title="Duration by Album",x="Distribution", y="Energy", fill="Album") + 
+  axistheme +
+  labs(title="Duration by Album",x="Release Year", y="Duration", fill="Album") + 
   scale_fill_manual(values=myPalette) 
 
-pos %>%  
+
+# key distribution for each album
+# keyDistribution.jpeg
+songs %>%  
   mutate(album_name = reorder(album_name, album_release_date, FUN= first)) %>%
   ggplot(aes(key_name)) + 
   geom_bar(fill=lightpink, col="darkgrey") + 
@@ -135,21 +136,43 @@ pos %>%
   labs(title="Key Distribution by Album",x="Key", y="Number of Songs", fill="Album") + 
   scale_fill_manual(values=myPalette) 
 
-# model to determine 
+
+
+# model to determine album based on qualities of music
 set.seed(1, sample.kind="Rounding")
 test_index <- createDataPartition(songs$album_name, times = 1, p = 0.2, list = FALSE)
-train_set <- pos %>% slice(-test_index)
-test_set <- pos %>% slice(test_index)
+train_set <- songs %>% slice(-test_index)
+test_set <- songs %>% slice(test_index)
 
+# four different fits 
+models <-c( "knn","qda", "naive_bayes", "svmLinear")
 
-grid = data.frame(mtry=seq(3,100, 2))
-cor(pos$positivity, pos$key_mode)
-fit <- train(album_name ~ positivity + duration_ms + danceability + key, data=train_set, method="rf", tuneGrid=grid)
+# train 4 different models 
+fits <- lapply(models, function(model){ 
+  train(album_name ~ positivity + danceability + key + acousticness, method = model, data = train_set)
+}) 
 
-fit$results
-pred <-   predict(fit, test_set)
-pred
+names(fits) <- models
+
+# accuracy of each indiviudal model on train set
+acc <- sapply(fits, function(fit){
+  mean(fit$results$Accuracy) 
+})
+
+# shows naive bayes and svmLinear are best
+acc
+
+# make predictions for each models 
+preds <- sapply(fits, function(fit){
+  predict(fit, test_set)
+})
+
+# accuracy of ensemble model without knn (worst perfrorming)
+pred <- apply(preds[,2:4], 1, function(pred) names(which.max(table(pred))))
 mean(pred == test_set$album_name)
 
-pos$
- 
+# accuracy of each individual model on test set
+acc2 <- apply(preds, 2, function(pred){mean(pred == test_set$album_name)})
+acc2
+knn
+preds
