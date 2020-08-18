@@ -34,10 +34,10 @@ Uses R to visualize how Taylor Swift's music has changed over the years!
   ## ML 
   - Divides data into training set and test set by album name
   - Using caret, creates 4 models (knn, qda, naive_bayes, and svmLinear), using 
-  danceability, key, positivity, and acousticness to predict which album it came from
+  danceability, key, positivity, and acousticness to predict which album a song came from
   - Using an ensemble model, we got an accuracy of around 37% when testing on the training set 
   (which is not great, but much better than randomly guessing one of 8 albums) 
-  - Probably not going to get much more accurate, becuase all of her music shares a qualities 
-  - One problem with the model is that a lot of it's accuracy comes from over guessing a couple albums 
+  - Probably not going to get much more accurate, becuase all of Taylor Swift's music is relatively similar musically
+  - One problem with the model is that a lot of its accuracy comes from over guessing a couple albums 
    (Fearless is guessed 40% percent of the time, Speak Now is only guessed 2% of the time despite 
    Fearless comprising only 15% of the data and Speak Now 10%) 
