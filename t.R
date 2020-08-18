@@ -174,5 +174,3 @@ mean(pred == test_set$album_name)
 # accuracy of each individual model on test set
 acc2 <- apply(preds, 2, function(pred){mean(pred == test_set$album_name)})
 acc2
-knn
-preds
