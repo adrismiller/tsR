@@ -155,7 +155,11 @@ fits <- lapply(models, function(model){
   if (model == "knn"){
     grid= data.frame(k=seq(1,50,1))
     train(album_name ~ positivity + danceability + key + acousticness, method = model, data = train_set, tuneGrid=grid)
-  }else{ 
+  }else if (model == "svmLinear"){ 
+    grid = data.frame(c=seq(1,2,0.1))
+    train(album_name ~ positivity + danceability + key + acousticness, method = model, data = train_set, tuneGrid=grid)
+    }
+  else{ 
     train(album_name ~ positivity + danceability + key + acousticness, method = model, data = train_set)
   }
   
@@ -184,7 +188,4 @@ mean(pred == test_set$album_name)
 # accuracy of each individual model on test set
 acc2 <- apply(preds, 2, function(pred){mean(pred == test_set$album_name)})
 acc2
-<<<<<<< HEAD
 
-=======
->>>>>>> e13aa4124f62960f01736325cb4ea8fb1e9af756
