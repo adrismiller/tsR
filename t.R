@@ -5,8 +5,7 @@ library(tidyverse)
 library(lubridate)
 library(caret)
 
-Sys.setenv(SPOTIFY_CLIENT_ID = '556b053ae2fb45ccba1936e608c9739e')
-Sys.setenv(SPOTIFY_CLIENT_SECRET = 'c54d125fed3741cbb7a3fc26d19e230e')  
+ 
 # every taylor swift song on spotify 
 all_taylor <- get_artist_audio_features(artist="Taylor Swift")
 
@@ -185,4 +184,7 @@ mean(pred == test_set$album_name)
 # accuracy of each individual model on test set
 acc2 <- apply(preds, 2, function(pred){mean(pred == test_set$album_name)})
 acc2
+<<<<<<< HEAD
 
+=======
+>>>>>>> e13aa4124f62960f01736325cb4ea8fb1e9af756
