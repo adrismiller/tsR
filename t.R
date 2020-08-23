@@ -4,11 +4,15 @@ library(spotifyr)
 library(tidyverse)
 library(lubridate)
 library(caret)
+
+Sys.setenv(SPOTIFY_CLIENT_ID = '556b053ae2fb45ccba1936e608c9739e')
+Sys.setenv(SPOTIFY_CLIENT_SECRET = 'c54d125fed3741cbb7a3fc26d19e230e')  
 # every taylor swift song on spotify 
 all_taylor <- get_artist_audio_features(artist="Taylor Swift")
 
 # main 8 albums (no live albums, special edtions ) 
 albums = c("Taylor Swift", "Speak Now", "Fearless", "Red", "1989", "reputation", "Lover", "folklore")
+
 main_8 <- all_taylor %>% filter(album_name %in% albums)  
 
 # remove weird kareoke/instrumental/commentary songs 
@@ -144,12 +148,18 @@ test_index <- createDataPartition(songs$album_name, times = 1, p = 0.2, list = F
 train_set <- songs %>% slice(-test_index)
 test_set <- songs %>% slice(test_index)
 
-# four different fits 
-models <-c( "knn","qda", "naive_bayes", "svmLinear")
+#  different fits 
+models <-c( "knn", "naive_bayes", "svmLinear")
 
 # train 4 different models 
 fits <- lapply(models, function(model){ 
-  train(album_name ~ positivity + danceability + key + acousticness, method = model, data = train_set)
+  if (model == "knn"){
+    grid= as.data.frame(k=seq(1,100,2))
+    train(album_name ~ positivity + danceability + key + acousticness, method = model, data = train_set, tuneGrid=grid)
+  }else{ 
+    train(album_name ~ positivity + danceability + key + acousticness, method = model, data = train_set)
+  }
+  
 }) 
 
 names(fits) <- models
@@ -164,15 +174,15 @@ acc
 
 # make predictions for each models 
 preds <- sapply(fits, function(fit){
-  predict(fit, test_set)
+    predict(fit, test_set)
+  
 })
 
 # accuracy of ensemble model without knn (worst perfrorming)
-pred <- apply(preds[,2:4], 1, function(pred) names(which.max(table(pred))))
+pred <- apply(preds[,2:3], 1, function(pred) names(which.max(table(pred))))
 mean(pred == test_set$album_name)
 
 # accuracy of each individual model on test set
 acc2 <- apply(preds, 2, function(pred){mean(pred == test_set$album_name)})
 acc2
-knn
-preds
+
