@@ -154,7 +154,7 @@ models <-c( "knn", "naive_bayes", "svmLinear")
 # train 4 different models 
 fits <- lapply(models, function(model){ 
   if (model == "knn"){
-    grid= as.data.frame(k=seq(1,100,2))
+    grid= data.frame(k=seq(1,50,1))
     train(album_name ~ positivity + danceability + key + acousticness, method = model, data = train_set, tuneGrid=grid)
   }else{ 
     train(album_name ~ positivity + danceability + key + acousticness, method = model, data = train_set)
