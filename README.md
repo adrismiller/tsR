@@ -33,7 +33,7 @@ Uses R to visualize how Taylor Swift's music has changed over the years!
   
   ## ML 
   - Divides data into training set and test set by album name
-  - Using caret, creates 4 models (knn, qda, naive_bayes, and svmLinear), using 
+  - Using caret, creates 3 models (K-nearest neighbors, Naive Bayes, and Linear SVM), using 
   danceability, key, positivity, and acousticness to predict which album a song came from
   - Using an ensemble model, we got an accuracy of around 37% when testing on the training set 
   (which is not great, but much better than randomly guessing one of 8 albums) 
